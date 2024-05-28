@@ -1,0 +1,16 @@
+{
+  "name": "site",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"(npm run start --prefix front)\" \"(npm run start:dev --prefix back)\"",
+    "upnpm": "cd back && npm i && cd .. && cd front && npm i && cd ..",
+    "start": "concurrently \"(npm run start --prefix front)\" \"(npm run start --prefix back)\""
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
