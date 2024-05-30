@@ -4,11 +4,17 @@ import { useConnectSocket } from './hooks/useConnectSocket.ts';
 import './styles/App.css';
 
 function App() {
+  // localStorage.removeItem('userId')
   const [text, setText] = useState('')
+  const [dialog, setDialog] = useState([])
   useConnectSocket()
 
   const send = () => {
-    SocketApt.socket.emit('newMessage', {text})
+    console.log(text)
+    SocketApt.socket.emit('newMessage', {text, user: localStorage.getItem('userId')})
+    SocketApt.socket.on('newMessage', async (res) => {
+      setDialog(res)
+    })
     setText('')
   }
 
@@ -19,6 +25,7 @@ function App() {
           <button onClick={send}>
             Кнопка
           </button>
+          {dialog.map(item => <div>{item.user + ': ' + item.text}</div>)}
         </div>
     </div>
   );

@@ -4,21 +4,22 @@ import { SocketApt } from "../api/socket-api.ts"
 export const useConnectSocket = () => {
 
     const connectSocket = async () => {
-        const res = SocketApt.createConnections()
-        console.log(SocketApt.socket) 
+        SocketApt.createConnections()
     }
 
     const userIdSet = async () => {
-        const userId = localStorage.getItem('userId')
-        console.log(userId)
+        let userId = localStorage.getItem('userId')
+        if(!userId && SocketApt.socket && SocketApt.socket.id){
+            localStorage.setItem('userId', SocketApt.socket.id)
+            userId = localStorage.getItem('userId')
+        }
         if(SocketApt.socket) SocketApt.socket.emit('userId', {userId})
     }
     
     useEffect(() => {
-        const regClient = async () => {
-            await connectSocket()
-            // await userIdSet()
-        }
-        regClient()
+            connectSocket()
+            setTimeout(() => {
+                userIdSet()
+            }, 1000)
     }, [])
 }

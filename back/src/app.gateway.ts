@@ -22,41 +22,31 @@ export class AppGateway
   constructor(private appService: AppService) {}
 
   @WebSocketServer() server: Server;
+
   @SubscribeMessage('newMessage')
-  async handleSendMessage(
-    client: Socket,
-    // payload: CreateMessDto,
-  ): Promise<void> {
-    // await this.appService.createMessage(payload);
-    // const all = (await this.appService.getMessage())
-    //   .reverse()
-    //   .map((item) => item.text);
-    // this.server.emit('res', all);
-    this.server.emit('res', 'newMessage');
+  async handleSendMessage(client: Socket, payload: any): Promise<void> {
+    console.log('payloadNewMessage', payload)
+    global.testDialog.push({user: payload.user, text: payload.text})
+    this.server.emit('newMessage', global.testDialog);
   }
 
   @SubscribeMessage('userId')
-  async test(
-    client: Socket,
-    // payload: CreateMessDto,
-  ): Promise<void> {
-    // await this.appService.createMessage(payload);
-    // const all = (await this.appService.getMessage())
-    //   .reverse()
-    //   .map((item) => item.text);
-    // this.server.emit('res', all);
-    this.server.emit('res', 'userId');
+  async test(client: Socket, payload: any): Promise<void> {
+    console.log('payloadUserId', payload)
+    if(!global.testUsers.includes(payload.userId) && payload.userId !== undefined || null) global.testUsers.push(payload.userId)
+    this.server.emit('responseUserId', global.testUsers);
   }
 
-  afterInit(server: any) {
-    console.log('server');
+  afterInit() {
+    // console.log(server)
+    console.log('server created');
   }
 
   handleConnection(client: Socket) {
-    console.log('connect', 'client',  client.id);
+    // console.log('connect', 'client',  client.id);
   }
 
   handleDisconnect(client: Socket) {
-    console.log('dicconnect', 'client',  client.id);
+    // console.log('dicconnect', 'client',  client.id);
   }
 }
